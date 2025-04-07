@@ -1,6 +1,3 @@
-Below is an updated README that incorporates elements from both your original `HaitiResourcePotential` README and the newer `HaitiResourceFuture` version I wrote, tailored to captivate geologists, UN representatives, Council on Foreign Relations (CFR) analysts, and Red Cross executives. It’s designed as a standout case study for a UN interview, with clickable sections, a blend of technical and non-technical appeal, and emphasis on AI-driven ingenuity via Grok 3 and RStudio’s Shiny framework. The repo name remains `HaitiResourcePotential`, but I’ve infused the new content to elevate its impact.
-
-```markdown
 # HaitiResourcePotential
 
 A pioneering RStudio Shiny app—crafted with AI ingenuity—unveiling Haiti’s untapped resource wealth (iridium, oil, natural gas) and its economic, humanitarian, and geopolitical stakes from 2025–2045.
