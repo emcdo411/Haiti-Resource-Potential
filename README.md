@@ -1,3 +1,4 @@
+```R
 library(shiny)
 library(leaflet)
 library(dplyr)
@@ -276,7 +277,7 @@ server <- function(input, output, session) {
     theme(new_theme)
     runjs(sprintf("document.body.className = '%s';", new_theme))
   })
-  
+
   # Reactive filtered wealth data
   filtered_data <- reactive({
     wealth_projection %>%
