@@ -1,8 +1,3 @@
-run: |
-  Rscript -e "install.packages('remotes')"
-  Rscript -e "install.packages('rsconnect')"
-
-
 name: Deploy Shiny App
 
 on:
@@ -23,7 +18,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          Rscript -e "install.packages(c('rsconnect'))"
+          Rscript -e "install.packages(c('remotes', 'rsconnect'))"
 
       - name: Deploy to shinyapps.io
         env:
@@ -34,5 +29,4 @@ jobs:
           Rscript -e "rsconnect::setAccountInfo(name=Sys.getenv('RSCONNECT_ACCOUNT'),
                                                 token=Sys.getenv('RSCONNECT_TOKEN'),
                                                 secret=Sys.getenv('RSCONNECT_SECRET'))"
-          Rscript -e "rsconnect::deployApp(appDir = '.', appName = 'my-shiny-app')"
-
+          Rscript -e "rsconnect::deployApp(appDir = '.', appName = 'HaitisPotentialProject')"
