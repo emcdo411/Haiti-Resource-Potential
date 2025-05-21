@@ -1,53 +1,3 @@
-# HaitiResourcePotential
-
-A pioneering RStudio Shiny app—crafted with AI ingenuity—unveiling Haiti’s untapped resource wealth (iridium, oil, natural gas) and its economic, humanitarian, and geopolitical stakes from 2025–2045.
-
-## Table of Contents
-- [Summary](#summary)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Code](#code)
-- [Why This Matters](#why-this-matters)
-- [Conclusion](#conclusion)
-- [References](#references)
-
-## Summary
-
-Haiti holds the world’s second-largest iridium deposits, as reported by *Orinoco Tribune* (January 2, 2025, Graham G. Henry, originally October 6, 2021), confirmed by South African experts in 2014 and Haiti’s Bureau of Mines and Energy. Located in the Southeast (Beloc, Bainet), these reserves—valued at $6,000/oz in 2021, triple gold’s price—join oil and gas to position Haiti as an economic wildcard. This Shiny app, deployed on [Shinyapps.io](insert-your-app-link-here), was built with Grok 3 (xAI) and human creativity, projecting $1.3B annual revenue by 2035, 50,000 Haitian jobs across 10 sectors, and $2.1B in tax revenue—plus $800M for the US. Geologists: map rare iridium. UN/CFR: weigh geopolitical risks from China/Russia. Red Cross: brace for humanitarian shifts. This is Haiti’s future, visualized.
-
-## Installation
-
-For technical users (geoscientists, data analysts):
-1. Install R (4.0.0+ recommended).
-2. Add required packages:
-   ```R
-   install.packages(c("shiny", "leaflet", "dplyr", "ggplot2", "plotly", "DT", "tidyr", "scales"))
-   ```
-3. Clone this repo:
-   ```bash
-   git clone https://github.com/yourusername/HaitiResourcePotential.git
-   ```
-4. Run in RStudio:
-   ```R
-   shiny::runApp("path/to/HaitiResourcePotential")
-   ```
-Non-technical users: Explore the live app [here](insert-your-app-link-here).
-
-## Usage
-
-- **Sidebar**: Filter years (2025–2045) and resources (Iridium, Oil, Gold, Natural Gas).
-- **Economic Projection**: Dynamic revenue plots, color-coded by resource.
-- **Resource Map**: Interactive map of Haiti’s Southeast, markers sized by reserves with detailed popups.
-- **Job & Tax Impact**: 50,000 Haitian and 20,000 US jobs, $2.9B total tax revenue by 2035.
-- **UN & Global Oversight**: Risk levels (e.g., China/Russia tension at 8/10 by 2035) and roles (UN peacekeeping, WHO health, Red Cross aid, US Coast Guard security).
-
-Geologists: dive into reserve data. UN/CFR: assess tax and risk implications. Red Cross: plan for displacement risks.
-
-## Code
-
-The latest AI-enhanced Shiny app, ready for global impact:
-
-```R
 library(shiny)
 library(leaflet)
 library(dplyr)
@@ -55,15 +5,16 @@ library(ggplot2)
 library(plotly)
 library(DT)
 library(tidyr)
+library(shinyjs)
 
 # Sample data for resources
 regions <- data.frame(
   region = c("Beloc", "Bainet", "Haiti South-East", "Haiti West", "Haiti Central"),
   lat = c(18.0, 18.5, 18.7, 19.0, 19.2),
   lng = c(-73.0, -73.5, -73.7, -73.8, -73.9),
-  iridium_reserve = c(50000, 75000, 80000, 60000, 70000), # kg
-  oil_reserve = c(20000000, 22000000, 142000000, 941000000, 35000000), # barrels
-  gas_reserve = c(159000000000, 159000000000, 1200000000000, 1200000000000, 1100000000000) # cubic feet
+  iridium_reserve = c(50000, 75000, 80000, 60000, 70000),
+  oil_reserve = c(20000000, 22000000, 142000000, 941000000, 35000000),
+  gas_reserve = c(159000000000, 159000000000, 1200000000000, 1200000000000, 1100000000000)
 )
 
 # Wealth projection
@@ -120,10 +71,168 @@ risk_projection <- expand.grid(year = risk_years, scenario = risk_scenarios) %>%
 
 # UI
 ui <- fluidPage(
+  useShinyjs(),
+  tags$head(
+    tags$style(HTML("
+      /* Dark Theme */
+      .dark-theme {
+        background-color: #1C2526;
+        color: #CAD2C5;
+      }
+      .dark-theme .title-panel {
+        background: linear-gradient(to right, #C8102E, #8B0000);
+        color: #CAD2C5;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        padding: 15px;
+        text-align: center;
+      }
+      .dark-theme .sidebar {
+        background-color: #2C2C2C;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        padding: 15px;
+      }
+      .dark-theme .nav-tabs > li > a {
+        background-color: #CAD2C5;
+        color: #1C2526;
+        border: none;
+        border-radius: 6px;
+        margin-right: 5px;
+        font-weight: 500;
+      }
+      .dark-theme .nav-tabs > li > a:hover {
+        background-color: #C8102E;
+        color: #CAD2C5;
+      }
+      .dark-theme .nav-tabs > li.active > a {
+        background-color: #8B0000;
+        color: #CAD2C5;
+      }
+      .dark-theme .tab-content {
+        background-color: #2C2C2C;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      }
+      .dark-theme .btn {
+        background-color: #C8102E;
+        color: #CAD2C5;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+      }
+      .dark-theme .btn:hover {
+        background-color: #8B0000;
+        color: #CAD2C5;
+      }
+      .dark-theme .dataTables_wrapper {
+        color: #CAD2C5;
+      }
+      .dark-theme .table-bordered {
+        border: 1px solid #CAD2C5;
+      }
+      .dark-theme .table-bordered th, .table-bordered td {
+        border: 1px solid #CAD2C5;
+      }
+      .dark-theme .leaflet-container {
+        background: #2C2C2C;
+        border-radius: 8px;
+        box-shadow:media {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      }
+
+      /* Light Theme */
+      .light-theme {
+        background-color: #FFFFFF;
+        color: #333333;
+      }
+      .light-theme .title-panel {
+        background: linear-gradient(to right, #C8102E, #8B0000);
+        color: #FFFFFF;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 15px;
+        text-align: center;
+      }
+      .light-theme .sidebar {
+        background-color: #F5F7FA;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 15px;
+      }
+      .light-theme .nav-tabs > li > a {
+        background-color: #E6ECF0;
+        color: #333333;
+        border: none;
+        border-radius: 6px;
+        margin-right: 5px;
+        font-weight: 500;
+      }
+      .light-theme .nav-tabs > li > a:hover {
+        background-color: #C8102E;
+        color: #FFFFFF;
+      }
+      .light-theme .nav-tabs > li.active > a {
+        background-color: #8B0000;
+        color: #FFFFFF;
+      }
+      .light-theme .tab-content {
+        background-color: #F5F7FA;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      .light-theme .btn {
+        background-color: #C8102E;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 16px;
+      }
+      .light-theme .btn:hover {
+        background-color: #8B0000;
+        color: #FFFFFF;
+      }
+      .light-theme .dataTables_wrapper {
+        color: #333333;
+      }
+      .light-theme .table-bordered {
+        border: 1px solid #E6ECF0;
+      }
+      .light-theme .table-bordered th, .table-bordered td {
+        border: 1px solid #E6ECF0;
+      }
+      .light-theme .leaflet-container {
+        background: #F5F7FA;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+
+      /* General Styles */
+      body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+    "))
+  ),
   titlePanel("Haiti's Potential: Resource-Based Economic Impact"),
-  
+  div(class = "theme-toggle",
+      actionButton("toggleTheme", "Toggle Theme", icon = icon("adjust"))
+  ),
   sidebarLayout(
     sidebarPanel(
+      class = "sidebar",
       h3("Wealth Projection"),
       sliderInput("years", "Select Year Range",
                   min = 2025, max = 2045, 
@@ -131,12 +240,11 @@ ui <- fluidPage(
                   step = 1, 
                   sep = ""),
       checkboxGroupInput("resources", "Select Resources",
-                        choices = c("Iridium", "Oil", "Gold", "Natural Gas"),
-                        selected = c("Iridium", "Oil", "Gold", "Natural Gas")),
+                         choices = c("Iridium", "Oil", "Gold", "Natural Gas"),
+                         selected = c("Iridium", "Oil", "Gold", "Natural Gas")),
       h5("Projected Wealth for Haiti"),
       DTOutput("revenue_table")
     ),
-    
     mainPanel(
       tabsetPanel(
         tabPanel("Economic Projection", plotlyOutput("wealth_plot", height = "500px")),
@@ -147,10 +255,10 @@ ui <- fluidPage(
                  DTOutput("job_tax_table")),
         tabPanel("UN & Global Oversight",
                  h3("Global Roles & Risks"),
-                 p("UN: Oversees peacekeeping (e.g., MSS transition), regulates extraction via environmental/trade rules."),
-                 p("WHO: Monitors health impacts from mining/drilling (e.g., pollution, worker safety)."),
-                 p("Red Cross: Provides aid if conflicts or disasters arise."),
-                 p("US Coast Guard: Secures maritime routes for resource transport."),
+                 p("UN: Oversees peacekeeping, regulates extraction."),
+                 p("WHO: Monitors health impacts from mining/drilling."),
+                 p("Red Cross: Provides aid for conflicts/disasters."),
+                 p("US Coast Guard: Secures maritime routes."),
                  plotlyOutput("risk_plot", height = "500px"),
                  DTOutput("risk_table"))
       )
@@ -160,6 +268,14 @@ ui <- fluidPage(
 
 # Server logic
 server <- function(input, output, session) {
+  # Theme toggle logic
+  theme <- reactiveVal("dark-theme")
+  observeEvent(input$toggleTheme, {
+    current_theme <- theme()
+    new_theme <- if (current_theme == "dark-theme") "light-theme" else "dark-theme"
+    theme(new_theme)
+    runjs(sprintf("document.body.className = '%s';", new_theme))
+  })
   
   # Reactive filtered wealth data
   filtered_data <- reactive({
@@ -208,18 +324,18 @@ server <- function(input, output, session) {
       mutate(resource = gsub("_revenue", "", resource))
     
     p <- ggplot(data_long, aes(x = year, y = revenue, color = resource)) +
-      geom_line() +
-      geom_point() +
+      geom_line(size = 1) +
+      geom_point(size = 2) +
       scale_y_continuous(labels = scales::dollar_format()) +
       labs(title = "Projected Wealth from Resources",
            x = "Year",
            y = "Revenue (USD)",
            color = "Resource Type") +
       theme_minimal() +
-      scale_color_manual(values = c("iridium" = "purple",
-                                  "oil" = "black",
-                                  "gold" = "gold",
-                                  "natural_gas" = "blue"))
+      scale_color_manual(values = c("iridium" = "#C8102E",
+                                    "oil" = "#1C2526",
+                                    "gold" = "#8B0000",
+                                    "natural_gas" = "#CAD2C5"))
     
     ggplotly(p)
   })
@@ -231,15 +347,25 @@ server <- function(input, output, session) {
       mutate(country = recode(country, "haiti_jobs" = "Haiti", "us_jobs" = "US"))
     
     p <- ggplot(data_long, aes(x = year, y = jobs, color = sector, linetype = country)) +
-      geom_line() +
-      geom_point() +
+      geom_line(size = 1) +
+      geom_point(size = 2) +
       scale_y_continuous(labels = scales::comma) +
       labs(title = "Projected Job Creation by Sector",
            x = "Year",
            y = "Number of Jobs",
            color = "Sector",
            linetype = "Country") +
-      theme_minimal()
+      theme_minimal() +
+      scale_color_manual(values = c("Mining (Iridium)" = "#C8102E",
+                                    "Offshore Drilling" = "#1C2526",
+                                    "Transportation & Logistics" = "#8B0000",
+                                    "Construction" = "#CAD2C5",
+                                    "Manufacturing" = "#C8102E",
+                                    "Energy Sector" = "#1C2526",
+                                    "Engineering & Technology" = "#8B0000",
+                                    "Environmental Services" = "#CAD2C5",
+                                    "Hospitality & Services" = "#C8102E",
+                                    "Education & Training" = "#1C2526"))
     
     ggplotly(p)
   })
@@ -251,15 +377,25 @@ server <- function(input, output, session) {
       mutate(country = recode(country, "haiti_tax" = "Haiti", "us_tax" = "US"))
     
     p <- ggplot(data_long, aes(x = year, y = tax, color = sector, linetype = country)) +
-      geom_line() +
-      geom_point() +
+      geom_line(size = 1) +
+      geom_point(size = 2) +
       scale_y_continuous(labels = scales::dollar_format()) +
       labs(title = "Projected Tax Revenue by Sector",
            x = "Year",
            y = "Tax Revenue (USD)",
            color = "Sector",
            linetype = "Country") +
-      theme_minimal()
+      theme_minimal() +
+      scale_color_manual(values = c("Mining (Iridium)" = "#C8102E",
+                                    "Offshore Drilling" = "#1C2526",
+                                    "Transportation & Logistics" = "#8B0000",
+                                    "Construction" = "#CAD2C5",
+                                    "Manufacturing" = "#C8102E",
+                                    "Energy Sector" = "#1C2526",
+                                    "Engineering & Technology" = "#8B0000",
+                                    "Environmental Services" = "#CAD2C5",
+                                    "Hospitality & Services" = "#C8102E",
+                                    "Education & Training" = "#1C2526"))
     
     ggplotly(p)
   })
@@ -281,14 +417,19 @@ server <- function(input, output, session) {
   # Render risk plot
   output$risk_plot <- renderPlotly({
     p <- ggplot(filtered_risk_data(), aes(x = year, y = risk_level, color = scenario)) +
-      geom_line() +
-      geom_point() +
+      geom_line(size = 1) +
+      geom_point(size = 2) +
       scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) +
       labs(title = "Projected Risk Levels (1-10)",
            x = "Year",
            y = "Risk Level",
            color = "Scenario") +
-      theme_minimal()
+      theme_minimal() +
+      scale_color_manual(values = c("Geopolitical Tension (China/Russia)" = "#C8102E",
+                                    "Proxy Conflict (N. Korea/Cuba)" = "#1C2526",
+                                    "Environmental Disaster" = "#8B0000",
+                                    "Humanitarian Crisis" = "#CAD2C5",
+                                    "Maritime Security" = "#C8102E"))
     
     ggplotly(p)
   })
@@ -300,7 +441,7 @@ server <- function(input, output, session) {
                "Environmental Disaster", "Humanitarian Crisis", "Maritime Security"),
       Description = c("China/Russia may oppose US-led extraction, risking sanctions or blockades.",
                       "N. Korea/Cuba could back local resistance, escalating tensions.",
-                      "Mining/drilling could cause spills or deforestation.",
+                      "Mining/drift could cause spills or deforestation.",
                       "Displacement or poverty spikes from resource boom.",
                       "Piracy or Houthi-like attacks on shipping routes."),
       Mitigation = c("UN mediation, trade agreements.",
@@ -321,16 +462,17 @@ server <- function(input, output, session) {
         lng = ~lng,
         lat = ~lat,
         radius = ~sqrt(iridium_reserve + oil_reserve/1000000 + gas_reserve/10000000000) / 5,
-        color = "purple",
+        color = "#800080",
+        fillColor = "#800080",
         fillOpacity = 0.6,
         popup = ~paste(region,
-                      "<br>Iridium:", scales::comma(iridium_reserve), "kg",
-                      "<br>Oil:", scales::comma(oil_reserve), "barrels",
-                      "<br>Gas:", scales::comma(gas_reserve), "cu.ft")
+                       "<br>Iridium:", scales::comma(iridium_reserve), "kg",
+                       "<br>Oil:", scales::comma(oil_reserve), "barrels",
+                       "<br>Gas:", scales::comma(gas_reserve), "cu.ft")
       ) %>%
       addLegend(
         position = "bottomright",
-        colors = "purple",
+        colors = "#800080",
         labels = "Resource Reserves"
       )
   })
@@ -339,37 +481,3 @@ server <- function(input, output, session) {
 # Run the application
 shinyApp(ui = ui, server = server)
 ```
-
-## Why This Matters
-
-Haiti’s iridium—second only to South Africa’s—offers geologists a rare frontier, with applications in aerospace and 5G tech (valued at $6,000/oz in 2021). For the UN, escalating risks (e.g., China/Russia tension at 8/10 by 2035) demand peacekeeping and regulation. CFR sees a $2.9B tax boon (Haiti: $2.1B, US: $800M by 2035), shifting Caribbean dynamics. Red Cross faces a dual reality: 50,000 jobs could uplift Haiti, but displacement risks loom. This AI-driven app, built with Grok 3, bridges science and policy—showing how Haiti could pivot from aid to autonomy, if global cooperation prevails over conflict.
-
-## Conclusion
-
-Deployed on Shinyapps.io, this app—born from AI collaboration and RStudio ingenuity—maps Haiti’s resource potential and its global stakes. It’s a case study for a UN role, blending economic forecasts (Dr. Vixamar’s vision of millions of jobs), job/tax impacts, and oversight risks. Geologists, policymakers, and humanitarians can explore this live tool. Next steps: real-time data and expanded models. Let’s discuss its fit for your mission!
-
-## References
-
-- Henry, Graham G. "Haiti has the World’s Second-Largest Iridium Deposits." *Orinoco Tribune*, January 2, 2025. Originally October 6, 2021. [Source](https://orinocotribune.com/haiti-has-the-worlds-second-largest-iridium-deposits/)
-- Shinyapps.io Deployment: [Insert Your App Link]
-```
-
-### Incorporation Details
-- **Repo Name**: Kept `HaitiResourcePotential` as requested, maintaining continuity.
-- **Summary**: Merged your original’s factual basis (Orinoco Tribune, Dr. Vixamar, iridium value) with the new version’s AI focus, deployment mention, and specific projections ($1.3B revenue, 50,000 jobs, $2.1B tax).
-- **Installation**: Retained your clear local setup steps, added the live app link for non-techies.
-- **Usage**: Expanded your original tabs (Economic Projection, Resource Map) with new ones (Job & Tax Impact, UN & Global Oversight), targeting specific audiences (geologists, UN, CFR, Red Cross).
-- **Code**: Used the latest version with all four tabs, wrapped in `<xaiArtifact>` as required.
-- **Why This Matters**: Blended your economic focus (jobs, self-sustained growth) with the new version’s targeted appeal (geology, UN risks, CFR tax, Red Cross duality), emphasizing AI’s role.
-- **Conclusion**: Kept your visualization focus, added AI/deployment highlights, and framed it as a UN interview asset.
-- **References**: Included both your source and the deployment link.
-
-### Audience Appeal
-- **Geologists**: Iridium’s rarity and mapping features.
-- **UN**: Risks (8/10 by 2035) and peacekeeping needs.
-- **CFR**: Tax revenue ($2.9B) and geopolitics.
-- **Red Cross**: Jobs vs. humanitarian risks.
-- **Technical**: R code and AI process.
-- **Non-Technical**: Live app access and plain-language stakes.
-
-Replace `[https://mmcdonald411.shinyapps.io/HaitisPotentialProject/]` and `yourusername` with your actual Shinyapps.io URL and GitHub username. This README is now a polished, interview-ready showcase for a global agency like the UN! Let me know if you’d like further adjustments.
